@@ -1,10 +1,18 @@
 import { Activity } from "../types"
+import { categories } from "../data/categories"
+import { useMemo } from "react"
 
 interface ActivvityListProps {
     activities: Activity[]
 }
 
 export default function ActivityList({activities}: ActivvityListProps) {
+
+    const categoryName = useMemo(() => (
+            category: Activity['category']
+        ) => categories.map(cat => cat.id === category ? cat.name : '')
+        ,[activities]
+    )
 
     return (
         <>
@@ -13,8 +21,8 @@ export default function ActivityList({activities}: ActivvityListProps) {
                 <div key={activity.id} className="px-5 py-10 bg-gray-100 mt-5 flex justify-between rounded-lg">
                     {/* Mostrar actividad, categoria y nombre y calorias */}
                     <div className="space-y-2 relative">
-                        <p>
-                            {activity.category}
+                        <p className={`absolute -top-8 -left-8 px-10 py-2 text-white uppercase font-bold ${activity.category === 1 ? 'bg-lime-500' : 'bg-orange-500'}`}>
+                            {categoryName(+activity.category)}
                         </p>
                         <p className="text-2xl font-bold pt-5">
                             {activity.name}
