@@ -3,7 +3,9 @@ import { Activity } from "../types"
 //Primero se tiene un type o interface
 export type ActivityActions =
     {type: 'save-activity', payload: {newActivity: Activity} }| 
-    {type: 'set-activeId', payload: {id: Activity['id']} };
+    {type: 'set-activeId', payload: {id: Activity['id']} } |
+    {type: 'delete-activeId', payload: {id: Activity['id']} }
+    ;
 
 //Ceamos un type o interface para el estado inicial
 export interface ActivityState {
@@ -11,9 +13,15 @@ export interface ActivityState {
     activeId: Activity['id']
 }
 
+//Esto va a ser el estado inicila basandose a lo que este guardado en local storage
+const localStorageActivities = () : Activity[] => {
+    const activities = localStorage.getItem('activities')
+    return activities ? JSON.parse(activities) : []
+}
+
 //Despues un estado inicial
 export const initialState: ActivityState = {
-    activities: [],
+    activities: localStorageActivities(),
     activeId: ''
 }
 
@@ -35,7 +43,7 @@ export const activityReducer = (
             //Escribiendo en el reducer
             ...state,
             activities: updatedActivities,
-            activeId: ''
+            activeId: '' 
         }
     }
     if(action.type === 'set-activeId') {
@@ -45,5 +53,13 @@ export const activityReducer = (
             activeId: action.payload.id
         }
     }
+    //Logica para eliminar actividades
+    if(action.type === 'delete-activeId') {
+        return {
+            ...state,
+            activities: state.activities.filter( activity => activity.id !== action.payload.id)
+        }
+    }
+
     return state;
 }
