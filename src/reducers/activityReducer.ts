@@ -4,7 +4,8 @@ import { Activity } from "../types"
 export type ActivityActions =
     {type: 'save-activity', payload: {newActivity: Activity} }| 
     {type: 'set-activeId', payload: {id: Activity['id']} } |
-    {type: 'delete-activeId', payload: {id: Activity['id']} }
+    {type: 'delete-activeId', payload: {id: Activity['id']} } |
+    {type: 'restart-app'} //esto hara que se reinicie la aplicacion, por ende no necesita un payload
     ;
 
 //Ceamos un type o interface para el estado inicial
@@ -58,6 +59,14 @@ export const activityReducer = (
         return {
             ...state,
             activities: state.activities.filter( activity => activity.id !== action.payload.id)
+        }
+    }
+
+    //Logica para resetear la aplicación
+    if(action.type === 'restart-app') {
+        return {
+            activities: [],
+            activeId: ''
         }
     }
 
